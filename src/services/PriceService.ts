@@ -28,7 +28,7 @@ export const getPrices = async () => {
     const formData = new FormData();
     formData.append('day', '01.01.2022');
     formData.append('month', '01.2022');
-    formData.append('type', 'day');
+    formData.append('type', 'month');
     const response = await fetch(
       'https://www.oree.com.ua/index.php/main/get_uah_prices',
       { method: 'POST', body: formData }
@@ -55,6 +55,6 @@ export const getPrices = async () => {
     });
     return priceList;
   } catch (err) {
-    return new Error('Original service unavailable');
+    throw new Error('Original service unavailable');
   }
 };

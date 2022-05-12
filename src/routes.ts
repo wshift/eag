@@ -1,7 +1,7 @@
 import * as Koa from 'koa';
 import * as Router from 'koa-router';
-// import getPrices from './services/PriceService';
 import * as PriceService from './services/PriceService';
+import { FeedbackForm, SupplyForm, ConnectForm } from './entity/Forms';
 
 const routerOpts: Router.IRouterOptions = {
   prefix: '/api/v1',
@@ -14,18 +14,24 @@ router.get('/prices', async (ctx: Koa.Context) => {
 });
 
 router.post('/submit-form/feedback', async (ctx: Koa.Context) => {
-  // TODO: put validation
-  ctx.body = 'POST';
+  const feedbackForm = new FeedbackForm(ctx.request.body);
+  const { status, ...body } = await feedbackForm.validateAndSubmit();
+  ctx.status = status;
+  ctx.body = body;
 });
 
 router.post('/submit-form/supply', async (ctx: Koa.Context) => {
-  // TODO: to submit supply form
-  ctx.body = 'POST';
+  const supplyForm = new SupplyForm(ctx.request.body);
+  const { status, ...body } = await supplyForm.validateAndSubmit();
+  ctx.status = status;
+  ctx.body = body;
 });
 
 router.post('/submit-form/connect', async (ctx: Koa.Context) => {
-  // TODO: to submit supply new customer
-  ctx.body = 'POST';
+  const connectForm = new ConnectForm(ctx.request.body);
+  const { status, ...body } = await connectForm.validateAndSubmit();
+  ctx.status = status;
+  ctx.body = body;
 });
 
 export default router;
