@@ -16,6 +16,7 @@
     "max-classes-per-file": [
       "error",
       { "ignoreExpressions": true, "max": 2 }
-    ]
+    ],
+    "arrow-parens": ["as-needed", { "requireForBlockBody": true }]
   }
 }
