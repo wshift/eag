@@ -7,7 +7,7 @@
     "lint": "tslint --project tsconfig.json --format stylish",
     "build": "tsc",
     "serve": "ts-node src/server.ts",
-    "start": "node build/server.js",
+    "start": "node dist/server.js",
     "start:dev": "nodemon"
   },
   "keywords": [],
