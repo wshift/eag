@@ -1,5 +1,6 @@
 import * as Koa from 'koa';
 import * as Router from 'koa-router';
+import { format } from 'date-fns';
 import * as PriceService from './services/PriceService';
 import { FeedbackForm, SupplyForm, ConnectForm } from './entity/Forms';
 
@@ -10,7 +11,9 @@ const routerOpts: Router.IRouterOptions = {
 const router: Router = new Router(routerOpts);
 
 router.get('/prices', async (ctx: Koa.Context) => {
-  ctx.body = await PriceService.getPrices();
+  const currentDay = format(new Date(), 'dd.MM.yyyy');
+  const { date = currentDay, dateTo = currentDay, type = 'day' } = ctx.query;
+  ctx.body = await PriceService.getPrices({ date, dateTo, type });
 });
 
 router.post('/submit-form/feedback', async (ctx: Koa.Context) => {
