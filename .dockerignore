@@ -1,0 +1,10 @@
+node_modules/
+Dockerfile
+.git
+.gitignore
+.dockerignore
+.eslintrc.json
+.prettierrc
+docker-compose.yml
+.npmrc
+readme.md

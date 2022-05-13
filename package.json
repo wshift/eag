@@ -5,9 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "lint": "tslint --project tsconfig.json --format stylish",
-    "build": "tsc",
-    "serve": "ts-node src/server.ts",
-    "start": "node dist/server.js",
+    "build": "tsc -p .",
+    "start": "NODE_PATH=./build node build/index.js",
     "start:dev": "nodemon"
   },
   "keywords": [],
@@ -38,6 +37,7 @@
   "dependencies": {
     "@types/jsdom": "^16.2.14",
     "@types/node": "^17.0.31",
+    "@types/validator": "^13.7.2",
     "class-validator": "^0.13.2",
     "date-fns": "^2.28.0",
     "eslint-config-airbnb-typescript-prettier": "^5.0.0",
