@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
-import * as FormData from 'form-data';
-import * as jsdom from 'jsdom';
+import FormData from 'form-data';
+import jsdom from 'jsdom';
 
 interface PriceListType {
   vdr: PriceItemType;

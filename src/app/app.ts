@@ -1,9 +1,11 @@
-import * as Koa from 'koa';
-import * as HttpStatus from 'http-status-codes';
-import * as bodyParser from 'koa-bodyparser';
+import Koa from 'koa';
+import cors from '@koa/cors';
+import HttpStatus from 'http-status-codes';
+import bodyParser from 'koa-bodyparser';
 import router from '../routes';
 
 const app: Koa = new Koa();
+app.use(cors());
 
 // Generic error handling middleware.
 app.use(async (ctx: Koa.Context, next: () => Promise<any>) => {

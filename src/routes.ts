@@ -1,5 +1,5 @@
-import * as Koa from 'koa';
-import * as Router from 'koa-router';
+import Koa from 'koa';
+import Router from 'koa-router';
 import { format } from 'date-fns';
 import * as PriceService from './services/PriceService';
 import { FeedbackForm, SupplyForm, ConnectForm } from './entity/Forms';
