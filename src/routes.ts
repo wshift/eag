@@ -16,23 +16,24 @@ router.get('/prices', async (ctx: Koa.Context) => {
   ctx.body = await PriceService.getPrices({ date, dateTo, type });
 });
 
-router.post('/submit-form/feedback', async (ctx: Koa.Context) => {
-  const feedbackForm = new FeedbackForm(ctx.request.body);
-  const { status, ...body } = await feedbackForm.validateAndSubmit();
-  ctx.status = status;
-  ctx.body = body;
-});
-
-router.post('/submit-form/supply', async (ctx: Koa.Context) => {
-  const supplyForm = new SupplyForm(ctx.request.body);
-  const { status, ...body } = await supplyForm.validateAndSubmit();
-  ctx.status = status;
-  ctx.body = body;
-});
-
-router.post('/submit-form/connect', async (ctx: Koa.Context) => {
-  const connectForm = new ConnectForm(ctx.request.body);
-  const { status, ...body } = await connectForm.validateAndSubmit();
+router.post('/submit-form/:type', async (ctx: Koa.Context) => {
+  const { type } = ctx.params;
+  let form;
+  switch (type) {
+    case 'feedback':
+      form = new FeedbackForm(ctx.request.body);
+      break;
+    case 'supply':
+      form = new SupplyForm(ctx.request.body);
+      break;
+    case 'connect':
+      form = new ConnectForm(ctx.request.body);
+      break;
+    default:
+      throw new Error(`${type} is unsupported type`);
+      return;
+  }
+  const { status, ...body } = await form.validateAndSubmit();
   ctx.status = status;
   ctx.body = body;
 });

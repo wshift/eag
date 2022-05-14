@@ -6,13 +6,13 @@ import {
   IsMobilePhone,
 } from 'class-validator';
 
-interface FeedbackFormType {
+export interface FeedbackFormType {
   fullName: string;
   text: string;
   email: string;
 }
 
-interface SupplyFormType {
+export interface SupplyFormType {
   name: string;
   contactName: string;
   phoneNumber: string;
@@ -27,7 +27,7 @@ interface SupplyFormType {
   subject: string;
 }
 
-interface ConnectFormType extends FeedbackFormType {
+export interface ConnectFormType extends FeedbackFormType {
   subject: string;
   phone: string;
   address: string;
@@ -41,7 +41,7 @@ class SubmitType {
       validationError: { target: false },
     }); // errors is an array of validation errors
     if (errors.length > 0) {
-      const invalidParams = errors.map((error) => error.property);
+      const invalidParams = errors.map(error => error.property);
       return { status: 400, success: false, errors: invalidParams };
     }
     return { status: 200, success: true, errors: [] };
