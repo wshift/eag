@@ -4,6 +4,6 @@ services:
     container_name: eho-app
     restart: always
     build: .
-#    env_file: .env
+    env_file: .env
     ports:
       - 3000:3000

@@ -1,4 +1,5 @@
 import app from './app/app';
+import 'dotenv/config';
 
 // Process.env will always be comprised of strings, so we typecast the port to a
 // number.

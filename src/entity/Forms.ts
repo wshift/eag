@@ -5,11 +5,14 @@ import {
   ValidationError,
   IsMobilePhone,
 } from 'class-validator';
+import { CourierClient } from '@trycourier/courier';
+import { EMAIL_FIELDS, EmailFieldType } from '../constants';
 
 export interface FeedbackFormType {
   fullName: string;
   text: string;
   email: string;
+  subject: string;
 }
 
 export interface SupplyFormType {
@@ -36,6 +39,8 @@ export interface ConnectFormType extends FeedbackFormType {
 }
 
 class SubmitType {
+  subject: string;
+
   async validateAndSubmit() {
     const errors: ValidationError[] = await validate(this, {
       validationError: { target: false },
@@ -44,7 +49,37 @@ class SubmitType {
       const invalidParams = errors.map(error => error.property);
       return { status: 400, success: false, errors: invalidParams };
     }
-    return { status: 200, success: true, errors: [] };
+
+    // submit data to an email
+    let text = '';
+    // eslint-disable-next-line no-restricted-syntax
+    for (const [key, value] of Object.entries(this)) {
+      text += `**${EMAIL_FIELDS[key as keyof EmailFieldType]}**: ${value}\n`;
+    }
+
+    const courier = CourierClient({
+      authorizationToken: process.env.TOKEN,
+    });
+
+    const { requestId } = await courier.send({
+      message: {
+        content: {
+          title: this.subject,
+          body: text,
+        },
+        to: {
+          email: process.env.EMAIL_RECIPIENT,
+        },
+      },
+    });
+    if (requestId) {
+      return { status: 200, success: true, errors: [] };
+    }
+    return {
+      status: 400,
+      success: false,
+      errors: ['Email sending error. Please check the system.'],
+    };
   }
 }
 
@@ -55,12 +90,14 @@ export class FeedbackForm extends SubmitType {
   text: string;
   @IsEmail()
   email: string;
+  subject: string;
 
   constructor(fields: FeedbackFormType) {
     super();
     this.fullName = fields.fullName;
     this.text = fields.text;
     this.email = fields.email;
+    this.subject = "Зворотній зв'язок";
   }
 }
 
