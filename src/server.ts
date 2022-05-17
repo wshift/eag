@@ -5,4 +5,4 @@ import 'dotenv/config';
 // number.
 const PORT: number = Number(process.env.PORT) || 3000;
 
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+app.listen(PORT, () => console.log(`Server started on port: ${PORT}`));

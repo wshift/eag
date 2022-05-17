@@ -1,7 +1,8 @@
 {
-  "extends": ["airbnb", "prettier", "plugin:node/recommended", "airbnb-typescript/base"],
+  "extends": ["airbnb", "prettier", "plugin:node/recommended"],
   "parserOptions": {
-    "project": "./tsconfig.json"
+    "project": "./tsconfig.json",
+    "sourceType": "module"
   },
   "plugins": ["prettier"],
   "rules": {
@@ -17,6 +18,7 @@
       "error",
       { "ignoreExpressions": true, "max": 2 }
     ],
-    "arrow-parens": ["as-needed", { "requireForBlockBody": true }]
+    "arrow-parens": [1],
+    "exceptAfterSingleLine": 1
   }
 }

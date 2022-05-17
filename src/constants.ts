@@ -31,3 +31,8 @@ export const EMAIL_FIELDS: EmailFieldType = {
   text: 'Відгук',
   subject: 'Тип звернення',
 };
+
+export const PRICE_PAGE_URL =
+  'https://www.oree.com.ua/index.php/main/get_weighted_average_prices';
+
+export const ALLOWED_FORM_TYPES = ['connect', 'supply', 'feedback'];

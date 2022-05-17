@@ -5,8 +5,8 @@ import {
   ValidationError,
   IsMobilePhone,
 } from 'class-validator';
-import { CourierClient } from '@trycourier/courier';
 import { EMAIL_FIELDS, EmailFieldType } from '../constants';
+import { sendEmail } from '../external-api/courier';
 
 export interface FeedbackFormType {
   fullName: string;
@@ -38,47 +38,44 @@ export interface ConnectFormType extends FeedbackFormType {
   power: string;
 }
 
+const createEmailText = (
+  emailObject: FeedbackFormType | SupplyFormType | ConnectFormType
+) => {
+  return Object.entries(emailObject)
+    .map(
+      array =>
+        `**${EMAIL_FIELDS[array[0] as keyof EmailFieldType]}**: ${array[1]}`
+    )
+    .join('\n');
+};
+
 class SubmitType {
   subject: string;
 
-  async validateAndSubmit() {
-    const errors: ValidationError[] = await validate(this, {
+  async validate(
+    formFields: FeedbackFormType | SupplyFormType | ConnectFormType
+  ) {
+    const errors: ValidationError[] = await validate(formFields, {
       validationError: { target: false },
     }); // errors is an array of validation errors
     if (errors.length > 0) {
       const invalidParams = errors.map(error => error.property);
-      return { status: 400, success: false, errors: invalidParams };
+      return { success: false, errors: invalidParams };
     }
+    return { success: true, errors: [] };
+  }
 
-    // submit data to an email
-    let text = '';
-    // eslint-disable-next-line no-restricted-syntax
-    for (const [key, value] of Object.entries(this)) {
-      text += `**${EMAIL_FIELDS[key as keyof EmailFieldType]}**: ${value}\n`;
-    }
-
-    const courier = CourierClient({
-      authorizationToken: process.env.TOKEN,
-    });
-
-    const { requestId } = await courier.send({
-      message: {
-        content: {
-          title: this.subject,
-          body: text,
-        },
-        to: {
-          email: process.env.EMAIL_RECIPIENT,
-        },
-      },
-    });
-    if (requestId) {
-      return { status: 200, success: true, errors: [] };
+  async submit(
+    formFields: FeedbackFormType | SupplyFormType | ConnectFormType
+  ) {
+    const text = createEmailText(formFields);
+    const messageSentRes = await sendEmail(text, formFields.subject);
+    if (messageSentRes.status) {
+      return { success: true, errors: [] };
     }
     return {
-      status: 400,
       success: false,
-      errors: ['Email sending error. Please check the system.'],
+      errors: [messageSentRes.error],
     };
   }
 }
@@ -174,3 +171,15 @@ export class ConnectForm extends SubmitType {
     this.power = fields.power;
   }
 }
+
+export const getFormByType = (type: string) => {
+  if (type === 'feedback') {
+    return FeedbackForm;
+  }
+  if (type === 'supply') {
+    return SupplyForm;
+  }
+  if (type === 'connect') {
+    return ConnectForm;
+  }
+};

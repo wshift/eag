@@ -7,6 +7,10 @@ import router from '../routes';
 const app: Koa = new Koa();
 app.use(cors());
 
+app.use(bodyParser());
+app.use(router.routes());
+app.use(router.allowedMethods());
+
 // Generic error handling middleware.
 app.use(async (ctx: Koa.Context, next: () => Promise<any>) => {
   try {
@@ -16,13 +20,8 @@ app.use(async (ctx: Koa.Context, next: () => Promise<any>) => {
       error.statusCode || error.status || HttpStatus.INTERNAL_SERVER_ERROR;
     error.status = ctx.status;
     ctx.body = { error };
-    ctx.app.emit('error', error, ctx);
   }
 });
-
-app.use(bodyParser());
-app.use(router.routes());
-app.use(router.allowedMethods());
 
 // Application error logging.
 // app.on('error', console.error(...));
