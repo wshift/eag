@@ -34,13 +34,13 @@ router.post('/submit-form/:type', async (ctx: Koa.Context) => {
     ctx.body = { status: false, error: ['Wrong form type provided'] };
   }
   const definedForm = new formType(formFields);
-  const validationResult = await definedForm.validate(formFields);
+  const validationResult = await definedForm.validate(definedForm);
   if (!validationResult.success) {
     ctx.status = 503;
     ctx.body = validationResult;
     return;
   }
-  const submitResult = await definedForm.submit(formFields);
+  const submitResult = await definedForm.submit(definedForm);
   if (!submitResult.success) {
     ctx.status = 503;
     ctx.body = submitResult;

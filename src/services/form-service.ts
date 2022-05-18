@@ -38,9 +38,17 @@ export interface ConnectFormType extends FeedbackFormType {
   power: string;
 }
 
-const createEmailText = (
-  emailObject: FeedbackFormType | SupplyFormType | ConnectFormType
-) => {
+type FormTypes = FeedbackForm | SupplyForm | ConnectForm;
+
+enum FORM_TITLE {
+  SUPPLY = 'suppy',
+  FEEDBACK = 'feedback',
+  CONNECT = 'connect',
+}
+
+const FEEDBACK_SUBJECT = "Зворотній зв'язок";
+
+const createEmailText = (emailObject: FormTypes) => {
   return Object.entries(emailObject)
     .map(
       array =>
@@ -52,9 +60,7 @@ const createEmailText = (
 class SubmitType {
   subject: string;
 
-  async validate(
-    formFields: FeedbackFormType | SupplyFormType | ConnectFormType
-  ) {
+  async validate(formFields: FormTypes) {
     const errors: ValidationError[] = await validate(formFields, {
       validationError: { target: false },
     }); // errors is an array of validation errors
@@ -65,9 +71,7 @@ class SubmitType {
     return { success: true, errors: [] };
   }
 
-  async submit(
-    formFields: FeedbackFormType | SupplyFormType | ConnectFormType
-  ) {
+  async submit(formFields: FormTypes) {
     const text = createEmailText(formFields);
     const messageSentRes = await sendEmail(text, formFields.subject);
     if (messageSentRes.status) {
@@ -95,7 +99,7 @@ export class FeedbackForm extends SubmitType {
     this.fullName = fields.fullName;
     this.text = fields.text;
     this.email = fields.email;
-    this.subject = "Зворотній зв'язок";
+    this.subject = FEEDBACK_SUBJECT;
   }
 }
 
@@ -171,13 +175,13 @@ export class ConnectForm extends SubmitType {
 }
 
 export const getFormByType = (type: string) => {
-  if (type === 'feedback') {
+  if (type === FORM_TITLE.FEEDBACK) {
     return FeedbackForm;
   }
-  if (type === 'supply') {
+  if (type === FORM_TITLE.SUPPLY) {
     return SupplyForm;
   }
-  if (type === 'connect') {
+  if (type === FORM_TITLE.CONNECT) {
     return ConnectForm;
   }
 };
