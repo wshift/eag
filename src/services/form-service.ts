@@ -83,10 +83,11 @@ class SubmitType {
 export class FeedbackForm extends SubmitType {
   @Length(3, 80)
   fullName: string;
-  @Length(10, 1000)
+  @Length(10, 2000)
   text: string;
   @IsEmail()
   email: string;
+  @Length(5, 100)
   subject: string;
 
   constructor(fields: FeedbackFormType) {
@@ -105,7 +106,7 @@ export class SupplyForm extends SubmitType {
   contactName: string;
   @IsEmail()
   email: string;
-  @IsMobilePhone()
+  @Length(5, 15)
   phoneNumber: string;
   @Length(1, 80)
   pointCode: string;
@@ -144,13 +145,11 @@ export class SupplyForm extends SubmitType {
 export class ConnectForm extends SubmitType {
   @Length(3, 80)
   fullName: string;
-  @Length(10, 1000)
-  text: string;
   @IsEmail()
   email: string;
   @Length(3, 80)
   subject: string;
-  @Length(3, 80)
+  @Length(5, 15)
   phone: string;
   @Length(3, 80)
   address: string;
@@ -162,7 +161,6 @@ export class ConnectForm extends SubmitType {
   constructor(fields: ConnectFormType) {
     super();
     this.fullName = fields.fullName;
-    this.text = fields.text;
     this.email = fields.email;
     this.subject = fields.subject;
     this.phone = fields.phone;
