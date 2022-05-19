@@ -41,7 +41,7 @@ export interface ConnectFormType extends FeedbackFormType {
 type FormTypes = FeedbackForm | SupplyForm | ConnectForm;
 
 enum FORM_TITLE {
-  SUPPLY = 'suppy',
+  SUPPLY = 'supply',
   FEEDBACK = 'feedback',
   CONNECT = 'connect',
 }
