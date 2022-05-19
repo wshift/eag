@@ -1,4 +1,5 @@
 import { getPricePage, parsePriceFromText } from '../external-api/oree';
+import moment from 'moment';
 
 interface PriceListType {
   // price types from original https://www.oree.com.ua/
@@ -17,12 +18,22 @@ interface PriceRequestType {
   type: string | string[];
 }
 
+const DEFAULT_DATE_FORMAT = 'DD.MM.YYYY';
+
+const addDaysToDate = (date: string | string[], daysToIncrease: number) => {
+  return moment(date, DEFAULT_DATE_FORMAT)
+    .add(daysToIncrease, 'days')
+    .format(DEFAULT_DATE_FORMAT);
+};
+
 export const getPrices = async ({ date, dateTo, type }: PriceRequestType) => {
   try {
     const datesAndType = { date, dateTo, type };
     // getPricePage returns html page as a string
     const rdnPageText = await getPricePage({
       ...datesAndType,
+      date: addDaysToDate(date, 2),
+      dateTo: addDaysToDate(dateTo, 2),
       market: 'DAM',
     });
 
