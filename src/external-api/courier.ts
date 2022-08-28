@@ -1,9 +1,13 @@
 import { CourierClient } from '@trycourier/courier';
 
-// TODO: why it doesn't parse?
-const courier = CourierClient({
-  authorizationToken: process.env.TOKEN || '1',
-});
+const initClient = (authorizationToken: string) => {
+  return CourierClient({
+    authorizationToken,
+  });
+};
+
+// TODO: client class
+const courier = initClient(process.env.TOKEN);
 
 export const sendEmail = async (text: string, title: string): Promise<any> => {
   try {

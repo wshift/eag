@@ -58,6 +58,7 @@ const createEmailText = (emailObject: FormTypes) => {
 };
 
 class SubmitType {
+  client:
   subject: string;
 
   async validate(formFields: FormTypes) {
@@ -73,7 +74,7 @@ class SubmitType {
 
   async submit(formFields: FormTypes) {
     const text = createEmailText(formFields);
-    const messageSentRes = await sendEmail(text, formFields.subject);
+    const messageSentRes = await client.sendEmail(text, formFields.subject);
     if (messageSentRes.status) {
       return { success: true, errors: [] };
     }
